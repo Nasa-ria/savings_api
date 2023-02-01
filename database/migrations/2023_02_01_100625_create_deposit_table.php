@@ -15,6 +15,10 @@ return new class extends Migration
     {
         Schema::create('deposit', function (Blueprint $table) {
             $table->id();
+            $table->string('amount_deposited');
+            $table->string('balance');
+            $table->unsignedBigInteger('user_id');
+            
             $table->timestamps();
         });
     }
