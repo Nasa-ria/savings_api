@@ -13,10 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('deposit', function (Blueprint $table) {
+        Schema::create('deposits', function (Blueprint $table) {
             $table->id();
             $table->string('amount_deposited');
-            $table->string('balance');
+            $table->string('balance')->nullable();
             $table->unsignedBigInteger('user_id');
             
             $table->timestamps();
