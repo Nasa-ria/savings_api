@@ -20,6 +20,6 @@ use App\Http\Controllers\UsersController;
 //     return $request->user();
 // });
 
-Route::post('SignIn', [UserController::class, 'SignIn']);
-// Route::put('update/{id}', [UserController::class, 'update']);
+Route::post('SignIn', [UsersController::class, 'SignIn']);
+Route::put('SignOut', [UsersController::class, 'signout']);
 Route::apiresource('user',UsersController::class);

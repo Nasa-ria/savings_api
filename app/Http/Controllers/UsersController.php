@@ -106,7 +106,7 @@ class UsersController extends Controller
 
 
 
-    public function logout() {
+    public function Signout() {
         Session::flush();
         Auth::logout();
     
