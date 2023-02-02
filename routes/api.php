@@ -3,7 +3,9 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\UsersController;
+use App\Http\Controllers\tansactionsController;
 use App\Http\Controllers\TransactionController;
 
 /*
@@ -25,4 +27,6 @@ Route::post('SignIn', [UsersController::class, 'SignIn']);
 Route::put('SignOut', [UsersController::class, 'signout']);
 Route::apiresource('user',UsersController::class);
 Route::post('deposit', [TransactionController::class, 'deposit']);
-Route::get('deposit', [AdminController::class, 'Users']);
+Route::post('withdrawal', [TransactionController::class, 'withdrawals']);
+Route::get('users', [AdminController::class, 'Users']);
+Route::get('tansactions/{id}', [AdminController::class, 'tansactions']);

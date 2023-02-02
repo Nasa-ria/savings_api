@@ -16,6 +16,7 @@ class DepositResource extends JsonResource
     {
         // return parent::toArray($request);
         return [
+            'id'=>$this->id,
             'balance' => $this->balance,   
             'amount_deposited' => $this->amount_deposited,      
             'user_id' => $this->user_id, 

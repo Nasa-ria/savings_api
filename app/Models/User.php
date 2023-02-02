@@ -54,7 +54,15 @@ class User extends Authenticatable
 
             public function User()
         {
-            return $this->hasMany(Deposit::class,'user_id','id');
+          $deposit= $this->hasMany(Deposit::class,'user_id','id');
+            $admin  =$this->hasOne(Admin::class,'id');
+            return [$deposit ,$admin];
         }
+
+        // public function Users()
+        // {
+        //     return $this->hasOne(Admin::class,'id');
+        // }
+
 
 }

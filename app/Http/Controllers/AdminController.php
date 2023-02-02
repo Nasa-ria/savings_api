@@ -10,16 +10,23 @@ class AdminController extends Controller
 {
     public function Users(){
         $users=  User::all();
-         $id = $users->id;
-        // fetching deposit history
-        $deposit =Deposit::where('user_id', '=', $id)->get(); 
-
-
          return response()->json([
             "users"=>$users,
-            "deposit"=>$deposit
          ]);
     }
 
+    public function tansactions(Request $request, $id){
+        $user = User::find($id);
+        if($id){
+            $deposit = Deposit::where('user_id' ,'=' ,$id)->get(); 
+         
+            return response()->json([
+                "deposit"=>$deposit
+            ]);
+
+
+        }
+
+    }
         
 }
