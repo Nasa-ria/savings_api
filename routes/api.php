@@ -25,3 +25,4 @@ Route::post('SignIn', [UsersController::class, 'SignIn']);
 Route::put('SignOut', [UsersController::class, 'signout']);
 Route::apiresource('user',UsersController::class);
 Route::post('deposit', [TransactionController::class, 'deposit']);
+Route::get('deposit', [AdminController::class, 'Users']);
