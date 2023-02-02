@@ -30,7 +30,7 @@ class TransactionController extends Controller
         // $user->update(['balance'=>$balance]);
                 //    dd($balance);
           return $deposit;
-    }
+    } 
         public function withdrawals(Request $request){
             // dd($request->all());
             $request->validate([
