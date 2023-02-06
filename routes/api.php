@@ -30,4 +30,5 @@ Route::post('deposit', [TransactionController::class, 'deposit']);
 Route::post('withdrawal', [TransactionController::class, 'withdrawals']);
 Route::get('users', [AdminController::class, 'Users']);
 Route::get('profile/{id}', [AdminController::class, 'profile']);
+Route::get('search', [AdminController::class, 'searching']);
 Route::get('tansactions/{id}', [AdminController::class, 'tansactions']);

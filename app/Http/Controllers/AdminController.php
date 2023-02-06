@@ -45,5 +45,21 @@ class AdminController extends Controller
         }
 
     }
+
+    public function searching(Request $request){
+        //get the request the user is passing
+        $search = $request->input('search');
+        //if you get the request, search in the model 
+        $users = User::  where('full_name', 'ilike', "%" . $search . "%" )
+                 // ->orwhere('location', 'ilike', "%" . $search . "%")
+                    ->get();
+        if($users->count() > 0){
+            return $users;
+        }else{
+            return response()->json([
+                "message" => "No results found"
+            ]);
+        }
+    }
         
 }
