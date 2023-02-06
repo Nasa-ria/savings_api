@@ -19,9 +19,12 @@ class AdminController extends Controller
         $user = User::find($id);
         if($id){
             $deposit = Deposit::where('user_id' ,'=' ,$id)->get(); 
-         
+          $balance =$deposit->balance; 
+            // $user->update(['balance'=>$balance]);
+            //            dd($balance);
             return response()->json([
-                "deposit"=>$deposit
+                "deposit"=>$deposit,
+                
             ]);
 
 

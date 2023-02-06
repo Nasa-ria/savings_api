@@ -9,28 +9,37 @@ use Illuminate\Http\Request;
 
 class TransactionController extends Controller
 {
+
     public function deposit(Request $request){
         // dd($request->all());
         $request->validate([
             'amount_deposited' => 'required',           
         ]);
        
-        //  dd($user);
         $deposit=new Deposit();
         $deposit['user_id'] = auth('api')->user()->id; 
         $deposit->amount_deposited=$request->input('amount_deposited');
-        // dd($deposit);
         $deposit->save();
-
+         
+        // updating balance 
         $balance =$deposit->balance +$deposit->amount_deposited;
         $deposit->update(['balance' => $balance]) ;
 
-        $user = auth()->user();
-        $balance =$user->balance +$deposit->amount_deposited;
-        // $user->update(['balance'=>$balance]);
-                //    dd($balance);
-          return $deposit;
+    //    updating user balance
+        $user_id=$deposit->user_id;
+           if($user_id){
+            $user = User::where('id' ,'=' ,$user_id)->first(); 
+            $balance=$user->balance + $deposit->amount_deposited;
+            $user->update(['balance'=>$balance]);
+            return response()->json([
+                "deposit"=>$deposit,
+                "balance"=>$user
+                
+            ]);
+           }
     } 
+
+
         public function withdrawals(Request $request){
             // dd($request->all());
             $request->validate([
@@ -43,13 +52,24 @@ class TransactionController extends Controller
             $withdrawal->save();
             
             // updating balance
-            $balance =$withdrawal->balance +$withdrawal->amount_withdrawn;
+            $balance =$withdrawal->balance - $withdrawal->amount_withdrawn;
             $withdrawal->update(['balance' => $balance]) ;
     
-            // $user = auth()->user();
-            // $balance =$user->balance +$withdrawl->amount_deposited;
-            // // $user->update(['balance'=>$balance]);
-            //         //    dd($balance);
-            return $withdrawal;
+            //  updating withdrawal
+            $user_id=$withdrawal->user_id;
+            if($user_id){
+             $user = User::where('id' ,'=' ,$user_id)->first(); 
+             $balance=$user->balance + $withdrawal->amount_withdrawn;
+             $user->update(['balance'=>$balance]);
+             return response()->json([
+                 "withdrawal"=>$withdrawal,
+                 "balance"=>$user
+                 
+             ]);
+                
+        
+            }
         }
+
+        
 }
