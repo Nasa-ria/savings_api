@@ -6,7 +6,9 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
+use App\Mail\SavingsMail;
 
 class UsersController extends Controller
 {
@@ -32,7 +34,7 @@ class UsersController extends Controller
         $request->validate([
             'full_name' => 'required',
             'email' => 'required|email|unique:users',
-            'password' => 'required|min:8',
+            'password' => 'required|min:8|confirmed',
            
         ]);
         $user= new User();
@@ -46,7 +48,18 @@ class UsersController extends Controller
             'data' => $user->refresh(),
             'token' => $accessToken
         ]);
+         
+        $data=[
+            'full_name'=>$request->full_name,
+            'email'=>$request->email,
 
+
+        ];
+
+        Mail::send('Email.mail', $data ,function($message) use ($data){ 
+          $message->to('mumuninasaria@gmail.com', 'Nasaria')
+          ->subject("please update your profile using this link: ". $data['full_name']);
+        });
     }
 
     /**

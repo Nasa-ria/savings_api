@@ -29,4 +29,5 @@ Route::apiresource('user',UsersController::class);
 Route::post('deposit', [TransactionController::class, 'deposit']);
 Route::post('withdrawal', [TransactionController::class, 'withdrawals']);
 Route::get('users', [AdminController::class, 'Users']);
+Route::get('profile/{id}', [AdminController::class, 'profile']);
 Route::get('tansactions/{id}', [AdminController::class, 'tansactions']);

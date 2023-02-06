@@ -22,18 +22,24 @@ class TransactionController extends Controller
         $deposit->save();
          
         // updating balance 
-        $balance =$deposit->balance +$deposit->amount_deposited;
+        $user_id=$deposit->user_id;
+           if($user_id){
+            $user = User::where('id' ,'=' ,$user_id)->first();
+        $balance =$user->balance +$deposit->amount_deposited;
         $deposit->update(['balance' => $balance]) ;
-
+           }
     //    updating user balance
         $user_id=$deposit->user_id;
            if($user_id){
-            $user = User::where('id' ,'=' ,$user_id)->first(); 
+            $user = User::where('id' ,'=' ,$user_id)->first();
+            $withdrawal = Withdrawal::where('id' ,'=' ,$user_id)->first();  
             $balance=$user->balance + $deposit->amount_deposited;
             $user->update(['balance'=>$balance]);
+            $withdrawal->update(['balance'=>$balance]);
             return response()->json([
-                "deposit"=>$deposit,
-                "balance"=>$user
+                // "deposit"=>$deposit,
+                "user"=>$user,
+                "withdrawal"=>$withdrawal,
                 
             ]);
            }
@@ -52,17 +58,23 @@ class TransactionController extends Controller
             $withdrawal->save();
             
             // updating balance
-            $balance =$withdrawal->balance - $withdrawal->amount_withdrawn;
+            $user_id=$withdrawal->user_id;
+            if($user_id){
+             $user = User::where('id' ,'=' ,$user_id)->first();
+            $balance =$user->balance - $withdrawal->amount_withdrawn;
             $withdrawal->update(['balance' => $balance]) ;
     
             //  updating withdrawal
             $user_id=$withdrawal->user_id;
             if($user_id){
              $user = User::where('id' ,'=' ,$user_id)->first(); 
-             $balance=$user->balance + $withdrawal->amount_withdrawn;
+             $deposit = Deposit::where('id' ,'=' ,$user_id)->first(); 
+             $balance=$user->balance - $withdrawal->amount_withdrawn;
              $user->update(['balance'=>$balance]);
+             $deposit->update(['balance'=>$balance]);
              return response()->json([
                  "withdrawal"=>$withdrawal,
+                //  "deposit"=>$deposit,
                  "balance"=>$user
                  
              ]);
@@ -72,4 +84,5 @@ class TransactionController extends Controller
         }
 
         
+}
 }
