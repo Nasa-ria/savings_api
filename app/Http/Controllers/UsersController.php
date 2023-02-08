@@ -113,10 +113,12 @@ class UsersController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $user=User::find($id);
+
+        $user->destroy();
     }
 
-    public function SignIn(Request $request)
+    public function SignIn(Request $request )
     { 
         $request->validate([
             'email' => 'required',
@@ -124,6 +126,7 @@ class UsersController extends Controller
         ]);
         $credentials = $request->only('email', 'password');
         if (Auth::attempt($credentials)) {
+
             return "success";            
         }
              return "fail";
@@ -137,4 +140,53 @@ class UsersController extends Controller
     
         return 'logout';
     }
+
+      
+
+    public function changePassword(Request $request , $id)
+{     
+        $user=User::find($id);
+        if($user){
+            $request->validate([
+                'old_password' => 'required',
+                'new_password' => 'required|confirmed',
+            ]);
+            // $user = User::where('' ,'=' ,$id)->get(); 
+            if(!Hash::check($request->old_password, auth()->user()->password)){
+                return "error Old Password Doesn't match!";
+            }
+    
+    
+            #Update the new Password
+            User::whereId(auth()->user()->id)->update([
+                'password' => Hash::make($request->new_password)
+            ]);
+            return "password updated";
+
+
+
+
+        }
+        // # Validation
+        // $request->validate([
+        //     'old_password' => 'required',  
+        //     'new_password' => 'required|confirmed',
+        // ]);
+
+
+        // #Match The Old Password
+        // if(!Hash::check($request->old_password, auth()->user()->password)){
+        //     return "error Old Password Doesn't match!";
+        // }
+
+
+        // #Update the new Password
+        // User::whereId(auth()->user()->id)->update([
+        //     'password' => Hash::make($request->new_password)
+        // ]);
+        // return "password updated";
+    }
+
+
+
 }
