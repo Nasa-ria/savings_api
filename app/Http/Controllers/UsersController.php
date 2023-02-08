@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\savingMail;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
-use App\Mail\SavingsMail;
+
 
 class UsersController extends Controller
 {
@@ -44,23 +45,32 @@ class UsersController extends Controller
          $user->save();
          $token = $user->createToken("USERS");
          $accessToken = $token->accessToken;
-         return response()->json([
-            'data' => $user->refresh(),
-            'token' => $accessToken
-        ]);
-         
-        $data=[
-            'full_name'=>$request->full_name,
-            'email'=>$request->email,
 
+        $mail = "mumuninasaria@gmail.com";
 
-        ];
+        // Mail::to($mail)->send(new savingMail($data));
 
-        Mail::send('Email.mail', $data ,function($message) use ($data){ 
-          $message->to('mumuninasaria@gmail.com', 'Nasaria')
-          ->subject("please update your profile using this link: ". $data['full_name']);
-        });
-    }
+        /**
+         * Check if the email has been sent successfully, or not.
+         * Return the appropriate message.
+         */
+        if (Mail::send($mail) instanceof savingMail) {
+            return response()->json([
+                'data' => $user->refresh(),
+                'token' => $accessToken,
+                "Email has been sent successfully."
+            ]);
+        }
+        return "Oops! There was some error sending the email.";
+          }
+        // return response()->json([
+        //     'data' => $user->refresh(),
+        //     'token' => $accessToken,
+        //     'great check your mail'
+        //     // 'mail'=>Mail
+        // ]);
+        
+    
 
     /**
      * Display the specified resource.
@@ -90,6 +100,8 @@ class UsersController extends Controller
         $user->next_of_kin_address= $request->get('next_of_kin_address');
         $user->next_of_kin_contact= $request->get('next_of_kin_contact'); 
         $user->save();
+        
+
       return $user;
     }
 

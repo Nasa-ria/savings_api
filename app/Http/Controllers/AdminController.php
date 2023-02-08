@@ -50,7 +50,7 @@ class AdminController extends Controller
         //get the request the user is passing
         $search = $request->input('search');
         //if you get the request, search in the model 
-        $users = User::  where('full_name', 'ilike', "%" . $search . "%" )
+        $users = User::  where('full_name', 'like', "%" . $search . "%" )
                  // ->orwhere('location', 'ilike', "%" . $search . "%")
                     ->get();
         if($users->count() > 0){
@@ -61,5 +61,6 @@ class AdminController extends Controller
             ]);
         }
     }
+
         
 }

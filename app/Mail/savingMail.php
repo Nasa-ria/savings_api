@@ -9,13 +9,11 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class SavingsMail extends Mailable
+class savingMail extends Mailable
 {
     use Queueable, SerializesModels;
-
-
-    public $data;
-
+     
+    public $data ;
     /**
      * Create a new message instance.
      *
@@ -23,8 +21,7 @@ class SavingsMail extends Mailable
      */
     public function __construct($data)
     {
-       
-        $this->data =$data;
+        $this-> data = $data;
     }
 
     /**
@@ -35,7 +32,7 @@ class SavingsMail extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject: 'Savings Mail',
+            subject: 'Saving Mail',
         );
     }
 
@@ -46,8 +43,12 @@ class SavingsMail extends Mailable
      */
     public function content()
     {
+
+        // return $this->from('helloworld@gmail.com','hello world')
+        // ->subject($this->data['subject'])->view('email.test')
+        // ->with('data',$this->data);
         return new Content(
-            view: 'view.name',
+            view: 'email.test ',
         );
     }
 
@@ -58,6 +59,13 @@ class SavingsMail extends Mailable
      */
     public function attachments()
     {
-        return [];
+        // return [];
+    }
+
+    public function build()
+    {
+        return $this->from('mumuninasaria@gmail.com','hello world')
+        ->subject($this->data['subject'])->view('email.test')
+        ->with('data',$this->data);
     }
 }
