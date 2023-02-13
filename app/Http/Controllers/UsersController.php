@@ -46,15 +46,18 @@ class UsersController extends Controller
          $token = $user->createToken("USERS");
          $accessToken = $token->accessToken;
 
-        $mail = "mumuninasaria@gmail.com";
-
-        // Mail::to($mail)->send(new savingMail($data));
+                 $mail = $request->email;
+                $data = [
+                    'title' => 'Mail from ItSolutionStuff.com',
+                    'body' => 'This is for testing email using smtp.'
+                ];
+        $mail= Mail::to($mail)->send(new savingMail($data));
 
         /**
          * Check if the email has been sent successfully, or not.
          * Return the appropriate message.
          */
-        if (Mail::send($mail) instanceof savingMail) {
+            if($mail){
             return response()->json([
                 'data' => $user->refresh(),
                 'token' => $accessToken,
@@ -63,13 +66,7 @@ class UsersController extends Controller
         }
         return "Oops! There was some error sending the email.";
           }
-        // return response()->json([
-        //     'data' => $user->refresh(),
-        //     'token' => $accessToken,
-        //     'great check your mail'
-        //     // 'mail'=>Mail
-        // ]);
-        
+
     
 
     /**
@@ -126,9 +123,26 @@ class UsersController extends Controller
         ]);
         $credentials = $request->only('email', 'password');
         if (Auth::attempt($credentials)) {
+            return"login successfully";
 
-            return "success";            
-        }
+            //             $mail = $request->email;
+            //             $data = [
+            //                 'title' => 'Mail from ItSolutionStuff.com',
+            //                 'body' => 'This is for testing email using smtp.'
+            //             ];
+            //         $mail= Mail::to($mail)->send(new savingMail($data));
+
+            //             /**
+            //              * Check if the email has been sent successfully, or not.
+            //              * Return the appropriate message.
+            //              */
+            //         if($mail){
+            //         return "Email has been sent successfully.";  
+            //     }
+            //     return "Oops! There was some error sending the email.";
+            }
+            
+        
              return "fail";
     }
 
@@ -147,55 +161,26 @@ class UsersController extends Controller
 {     
         $user= auth('api')->user();
         $password = $user->password;
-        // if($user){
-  
+
             $request->validate([
                 'old_password' => 'required',
                 'new_password' => 'required',
                 'confirm_password' => 'required'
             ]);
-              if(Hash::check($request->old_password, $password)){
-                if($request->old_password == $request->confrim_password){
+              if(Hash::check($request->old_password,$password)){
+                if($request->new_password == $request->confirm_password){
                 #Update the new Password
-                // User::whereId(auth()->user()->id)->update([
-                    $user->update([
-                    'password' => Hash::make($request->new_password)
-                ]);
+                    User::whereId($user->id)->update([
+                    'password' => Hash::make($request->new_password) ]);
+                     return "password change successfully";
                  }
-                 return "new password mismatch";
+                    return " password mismatch";
+                 }
+                return " error:Old Password Doesn't match!";
             }
-             return " error Old Password Doesn't match!";
-        
-            // #Update the new Password
-            // User::whereId(auth()->user()->id)->update([
-            //     'password' => Hash::make($request->new_password)
-            // ]);
-            // return "password updated";
 
-
-
-
-        // }
-        // # Validation
-        // $request->validate([
-        //     'old_password' => 'required',  
-        //     'new_password' => 'required|confirmed',
-        // ]);
-
-
-        // #Match The Old Password
-        // if(!Hash::check($request->old_password, auth()->user()->password)){
-        //     return "error Old Password Doesn't match!";
-        // }
-
-
-        // #Update the new Password
-        // User::whereId(auth()->user()->id)->update([
-        //     'password' => Hash::make($request->new_password)
-        // ]);
-        // return "password updated";
     }
 
 
 
-}
+

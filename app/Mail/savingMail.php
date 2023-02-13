@@ -44,9 +44,6 @@ class savingMail extends Mailable
     public function content()
     {
 
-        // return $this->from('helloworld@gmail.com','hello world')
-        // ->subject($this->data['subject'])->view('email.test')
-        // ->with('data',$this->data);
         return new Content(
             view: 'email.test ',
         );
@@ -64,8 +61,10 @@ class savingMail extends Mailable
 
     public function build()
     {
-        return $this->from('mumuninasaria@gmail.com','hello world')
-        ->subject($this->data['subject'])->view('email.test')
-        ->with('data',$this->data);
+        // return $this->from('emailTesting@gmail.com','hello world')
+        // ->subject($this->data['subject'])->view('email.test')
+        // ->with('data',$this->data);
+        return $this->subject('Mail from ItSolutionStuff.com')
+        ->view('emails.test');
     }
 }
