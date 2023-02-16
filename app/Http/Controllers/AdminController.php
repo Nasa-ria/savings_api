@@ -51,11 +51,11 @@ class AdminController extends Controller
         $search = $request->input('search');
         //if you get the request, search in the model 
         $users = User::  where('full_name', 'like', "%" . $search . "%" )
-                 // ->orwhere('location', 'ilike', "%" . $search . "%")
+                 ->orwhere('email', 'like', "%" . $search . "%")
                     ->get();
         if($users->count() > 0){
             return $users;
-        }else{
+        }else{ 
             return response()->json([
                 "message" => "No results found"
             ]);

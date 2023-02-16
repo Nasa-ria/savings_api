@@ -3,26 +3,24 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Address;
-use Illuminate\Mail\Mailables\Content;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Content;
+use Illuminate\Mail\Mailables\Envelope;
+use Illuminate\Queue\SerializesModels;
 
-class savingMail extends Mailable
+class Mail extends Mailable
 {
     use Queueable, SerializesModels;
-     
-    public $data ;
+
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($data)
+    public function __construct()
     {
-        $this-> data = $data;
+        //
     }
 
     /**
@@ -33,9 +31,7 @@ class savingMail extends Mailable
     public function envelope()
     {
         return new Envelope(
-            // subject: 'Saving Mail',
-                from: new Address('jeffrey@example.com', 'Savings Api'),
-                subject: 'sign up ',
+            subject: 'Mail',
         );
     }
 
@@ -46,9 +42,8 @@ class savingMail extends Mailable
      */
     public function content()
     {
-
         return new Content(
-            view: 'email.test ',
+            markdown: 'emails.Mail',
         );
     }
 
@@ -59,15 +54,6 @@ class savingMail extends Mailable
      */
     public function attachments()
     {
-        // return [];
-    }
-
-    public function build()
-    {
-        // return $this->from('emailTesting@gmail.com','hello world')
-        // ->subject($this->data['subject'])->view('email.test')
-        // ->with('data',$this->data);
-        return $this->subject('Mail from ItSolutionStuff.com')
-        ->view('emails.test');
+        return [];
     }
 }
