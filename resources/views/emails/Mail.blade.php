@@ -1,7 +1,7 @@
 <x-mail::message>
 # Introduction
 
-The body of your message.
+Welcome to Laravel savings api . you made a deposit of *** amount .have a good day .
 
 <x-mail::button :url="''">
 Button Text

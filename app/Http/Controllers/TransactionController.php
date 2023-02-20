@@ -6,6 +6,8 @@ use App\Models\User;
 use App\Models\Deposit;
 use App\Models\Withdrawal;
 use Illuminate\Http\Request;
+use App\Events\Mailtransaction;
+use Illuminate\Support\Facades\DB;
 
 class TransactionController extends Controller
 {
@@ -16,11 +18,16 @@ class TransactionController extends Controller
             'amount_deposited' => 'required',           
         ]);
        
+    
+
         $deposit=new Deposit();
         $deposit['user_id'] = auth('api')->user()->id; 
         $deposit->amount_deposited=$request->input('amount_deposited');
         $deposit->save();
-         
+        $email= auth('api')->user()->email;
+        //    dd($email);
+           event(new Mailtransaction($email));
+
         // updating balance 
         $user_id=$deposit->user_id;
            if($user_id){
@@ -32,10 +39,11 @@ class TransactionController extends Controller
         $user_id=$deposit->user_id;
            if($user_id){
             $user = User::where('id' ,'=' ,$user_id)->first();
-            $withdrawal = Withdrawal::where('id' ,'=' ,$user_id)->first();  
+            // $withdrawal = Withdrawal::where('id' ,'=' ,$user_id)->first();  
             $balance=$user->balance + $deposit->amount_deposited;
             $user->update(['balance'=>$balance]);
-            $withdrawal->update(['balance'=>$balance]);
+            $withdrawal= DB::table('Withdrawals')->where('id' ,'=' ,$user_id)->update(['balance'=>$balance]);
+            // $withdrawal->update(['balance'=>$balance]);
             return response()->json([
                 // "deposit"=>$deposit,
                 "user"=>$user,
@@ -43,6 +51,10 @@ class TransactionController extends Controller
                 
             ]);
            }
+           $email= auth('api')->user()->email;
+        //    dd($email);
+           event(new Mailtransaction($email));
+
     } 
 
 
