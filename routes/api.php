@@ -24,7 +24,7 @@ use App\Http\Controllers\TransactionController;
 // });
 
 Route::post('SignIn', [UsersController::class, 'SignIn']);
-Route::put('SignOut', [UsersController::class, 'signout']);
+Route::post('SignOut', [UsersController::class, 'signout']);
 Route::post('changePassword',[UsersController::class,'changePassword']);
 Route::apiresource('user',UsersController::class);
 Route::post('deposit', [TransactionController::class, 'deposit']);
