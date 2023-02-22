@@ -19,7 +19,7 @@ class UserTest extends TestCase
         #test for signing up 
         $response = $this->post('api/user',[
             'full_name' => 'user one',
-            'email' => 'user0@gmail.com',
+            'email' => 'user8@gmail.com',
             'password' =>'userone1',
             'password_confirmation'=>'userone1'
         ]);
@@ -39,4 +39,17 @@ class UserTest extends TestCase
             'full_name'=>'John Doe'
         ]);
      }
+     #test if seeders works
+//      public function test_if_seeder_works(){
+//         // seeds all seeders in te seeders folder.
+//         $this->seed();  // equals to php artisan db:seed
+//      }
+        public function test_update_user(){
+            // $response= $this->patch('api/user/'.$user->id,[
+
+             
+            // ]);
+            
+        }
+
 }
