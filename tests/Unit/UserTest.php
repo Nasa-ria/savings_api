@@ -16,11 +16,10 @@ class UserTest extends TestCase
   
     public function test_login()
     {
-        // $this->withoutMiddleware();
-
-        $response = $this->post('api/SignIn',[
+        #test for signing up 
+        $response = $this->post('api/user',[
             'full_name' => 'user one',
-            'email' => 'user1@gmail.com',
+            'email' => 'user0@gmail.com',
             'password' =>'userone1',
             'password_confirmation'=>'userone1'
         ]);
@@ -28,5 +27,16 @@ class UserTest extends TestCase
         $response->assertStatus(200);
     }
 
-    
+    #test for checking if user exist
+     public function test_database(){
+        $this->assertDatabaseHas('users',[
+            'full_name'=>'Jane Doe'
+        ]);
+     }
+
+     public function test_database2(){
+        $this->assertDatabaseMissing('users',[
+            'full_name'=>'John Doe'
+        ]);
+     }
 }
