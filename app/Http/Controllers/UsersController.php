@@ -160,14 +160,15 @@ class UsersController extends Controller
     public function changePassword(Request $request  )
 {     
         $user= auth('api')->user();
-        $password = $user->password;
+        // $password = $user->password;
+        // dd($password);
 
             $request->validate([
                 'old_password' => 'required',
                 'new_password' => 'required',
                 'confirm_password' => 'required'
             ]);
-              if(Hash::check($request->old_password,$password)){
+              if($user && Hash::check($request->old_password, $user->password)){
                 if($request->new_password == $request->confirm_password){
                 #Update the new Password
                     User::whereId($user->id)->update([
