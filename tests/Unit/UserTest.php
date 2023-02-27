@@ -14,6 +14,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use \Illuminate\Foundation\Testing\WithoutMiddleware;
 
 
 
@@ -25,6 +26,7 @@ class UserTest extends TestCase
         use WithFaker;
         use CreatesApplication;
         use HasFactory;  
+        use WithoutMiddleware;
     /**
      * A basic unit test example.
      *
@@ -77,33 +79,33 @@ class UserTest extends TestCase
 
            /** @test */
         public function test_update_user(){
-            $this->withoutExceptionHandling();
+            // $data = factory(User::class)->make();
+            $data = User::factory()->create();
 
-           $user = User::factory()->create();
-           $this->actingAs($user);
-        //     'address' => $this->faker->address,
-        //     'contact' => $this->faker->contact,
-        //     'subscription' => $this->faker->subscription,
-        //     'next_of_king_fullname' => $this->faker->next_of_king_fullname,
-        //     'next_of_king_contact' => $this->faker->next_of_king_contact,
-        //     'next_of_king_address' => $this->faker->next_of_king_address,
-        //    ]);
-           $response=$this->post('api/user/'.$user->id, [
-            'address' => $this->faker->address,
-           'contact' => $this->faker->contact,
-           'subscription' => $this->faker->subscription,
-           'next_of_king_fullname' => $this->faker->next_of_king_fullname,
-           'next_of_king_contact' => $this->faker->next_of_king_contact,
-           'next_of_king_address' => $this->faker->next_of_king_address,])->assertStatus(200);
+        $response = $this->post('api/store', [
+            'contact'=> $data->contact,
+        ]);
 
-            //  $userRepo = new UserRepository($data);
-            // $update = $userRepo->update($data);
-            
-            // $this->assertTrue($update);
-            // $this->assertEquals($data['contact'], $user->contact);
-            // $this->assertEquals($data['address'], $user->address);
-            // $this->assertEquals($data['subscription'], $user->subscription);
+        $user = User::first();
+
+        // $data2 = factory(PostModel::class)->make();
+        //  $data2=User::factory()->create();
+
+        $this->patch('api/update/' . $user->id , [
+            'contact'=> 'update',
+
+            // 'body'=> $data->body,
+
+            // 'category'=> $data->category_id,
+
+            // 'tag'=> [rand(1, 5)],
+        ]);
+
+        // $post->refresh();
+        
+        $this->assertEquals('update', $user->contact);
         }
+
          /** @test */
             public function a_visitor_can_able_to_login()
             {
