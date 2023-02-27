@@ -19,7 +19,13 @@ class UsersTableSeeder extends Seeder
         DB::table('users')->insert([
             'full_name'=>'Jane Doe',
             'email'=>'janedoe@gmail.com',
-            'password'=>Hash::make('password')
+            'password'=>Hash::make('password'),
+            'subscription'=>'weeekly',
+            'contact'=>'0562849027',
+            'address'=>'Accra,Ghana.Oyibi',
+            'Next_of_kin_fullname'=>'Janet Doe',
+            'Next_of_kin_address'=>'Accra,Ghana.lapaz',
+            'Next_of_kin_contact'=>'749207638',
         ]);
     }
 }

@@ -111,8 +111,8 @@ class UsersController extends Controller
     public function destroy($id)
     {
         $user=User::find($id);
-
-        $user->destroy();
+        User::where('id', '=', $user)->delete();
+        // $user->destroy();
     }
 
     public function SignIn(Request $request )
