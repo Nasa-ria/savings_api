@@ -3,18 +3,23 @@
 namespace Tests\Unit;
 
 // use PHPUnit\Framework\TestCase;
+// use App\Mail\Mail;
+use App\Mail\Test;
 use Tests\TestCase;
 use App\Models\User;
+use App\Mail\UserInvite;
 use Tests\CreatesApplication;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Password;
 use Laravel\Passport\Bridge\UserRepository;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use \Illuminate\Foundation\Testing\WithoutMiddleware;
+
 
 
 
@@ -49,16 +54,15 @@ class UserTest extends TestCase
     {
         $this->withoutExceptionHandling();
         #test for signing up 
-
          User::factory()->create()->createToken('test');
-
         $response = $this->post('api/user',[
             'full_name' => 'user one',
             'email' => 'user6723@gmail.com',
             'password' =>'userone1',
             'password_confirmation'=>'userone1'
-        ]);
-        
+        ]);   
+        //    Mail::to('ben@google.com')->send(new test());
+           Mail::raw('Hello World!', function($msg) {$msg->to('myemail@gmail.com')->subject('Test Email'); });
         // $response ->assertStatus(200)->json(true);
         $response->assertStatus(200);
     }
@@ -70,54 +74,100 @@ class UserTest extends TestCase
             'full_name'=>'uyt Doe'
         ]);
      }
-     #test if seeders works
-    //  public function test_if_seeder_works(){
-    //     // seeds all seeders in te seeders folder.
-    //     $this->seed();  // equals to php artisan db:seed
- 
-    //  }
 
-           /** @test */
-        public function test_update_user(){
-            // $data = factory(User::class)->make();
-            $data = User::factory()->create();
 
-        $response = $this->post('api/store', [
-            'contact'=> $data->contact,
-        ]);
 
-        $user = User::first();
+    /** @test */
+    public function a_visitor_can_able_to_login()
+    {
+        $user = User::factory()->create();
 
-        // $data2 = factory(PostModel::class)->make();
-        //  $data2=User::factory()->create();
+        $hasUser = $user ? true : false;
 
-        $this->patch('api/update/' . $user->id , [
-            'contact'=> 'update',
+        $this->assertTrue($hasUser);
 
-            // 'body'=> $data->body,
+        $response = $this->actingAs($user);
+    }
 
-            // 'category'=> $data->category_id,
 
-            // 'tag'=> [rand(1, 5)],
-        ]);
 
-        // $post->refresh();
-        
-        $this->assertEquals('update', $user->contact);
-        }
+     /** @test */
+     public function test_to_fetch_all_user(){
+        $this->withoutExceptionHandling();
+        $response = $this->get('api/users');
+        $response->assertStatus(200);
+     }
+
+
+     /** @test */
+     public function test_delete_user(){
+        $this->withoutExceptionHandling();
+         // First The user is created
+         $user = User::factory()->create();
+         //act as user
+         $this->actingAs($user);
+        $response = $this->delete('api/user/'.$user->id);
+        $this->assertEquals(200, $response->getStatusCode());
+
+
+     }
+
+
+     /** @test */
+     public function test_user_profile(){
+     $this->withoutExceptionHandling();
+     // First The user is created
+      $user = User::factory()->create();
+         //act as user
+     $this->actingAs($user);
+         // Then we want to make sure a profile page is created
+     $response = $this->get('/api/profile/'.$user->id);
+         //
+     $response->assertStatus(200);
+    }
+
 
          /** @test */
-            public function a_visitor_can_able_to_login()
-            {
-                $user = User::factory()->create();
+     public function test_for_email_sending()
+    {
+        $this->withoutExceptionHandling();
+        Mail::fake();
+        $data = [
+                        'title' => 'Mail from ItSolutionStuff.com',
+                        'body' => 'This is for testing email using smtp.'
+                    ];
+        $mail= Mail::to('emailTesting@gmail.com')->send(new Test($data));
 
-                $hasUser = $user ? true : false;
+        Mail::assertSent(Test::class);
+    }
 
-                $this->assertTrue($hasUser);
 
-                $response = $this->actingAs($user);
-            }
 
+
+        //    /** @test */
+        public function test_update_user(){
+            $this->withExceptionHandling(); 
+
+            //creating a user
+            $user = User::factory()->create();
+        
+            //signing in as the new user
+            $this->actingAs($user);
+        
+            //passing updating values
+            $response = $this->put('api/update'.$user->id, [
+                // 's' => 'name123',
+                // 'contact' => 9842345562,
+                'address' => 'Accra,Ghana.lapaz'
+            ]);
+        
+            //Get new values
+            $user->refresh();
+            // $this->assertEquals(9842345562, $user->contact);
+            $this->assertEquals('Accra,Ghana.lapaz', $user->address);
+        }
+
+         
 
                     /** @test */
             // public function the_user_can_update_their_password()
@@ -149,46 +199,17 @@ class UserTest extends TestCase
             //     Event::assertDispatched(PasswordReset::class);
             // }
 
-             /** @test */
-             public function test_to_fetch_all_user(){
-                $this->withoutExceptionHandling();
-                $response = $this->get('api/users');
-                $response->assertStatus(200);
-             }
+            
 
-
-             public function test_delete_user(){
-                $this->withoutExceptionHandling();
-
-                 // First The user is created
-                 $user = User::factory()->create();
-         
-                 //act as user
-                 $this->actingAs($user);
-                $response = $this->delete('api/user/'.$user->id);
-
-                $this->assertEquals(200, $response->getStatusCode());
-
-
-             }
+            
 
 
 
-             public function test_user_profile()
-             {
+            
 
-                $this->withoutExceptionHandling();
 
-                 // First The user is created
-                 $user = User::factory()->create();
-         
-                 //act as user
-                 $this->actingAs($user);
-         
-                 // Then we want to make sure a profile page is created
-                 $response = $this->get('/api/profile/'.$user->id);
-         
-                 //
-                 $response->assertStatus(200);
-             }
+               
+
+
+
         }

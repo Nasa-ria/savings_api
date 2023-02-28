@@ -3,13 +3,14 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Content;
-use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Mail\Mailables\Envelope;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
-class Mail extends Mailable
+class Test extends Mailable
 {
     use Queueable, SerializesModels;
     public $data ;
@@ -19,9 +20,9 @@ class Mail extends Mailable
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($data)
     {
-        //
+        $this-> data = $data;
     }
 
     /**
@@ -32,7 +33,9 @@ class Mail extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject: 'Mail',
+            // subject: 'Saving Mail',
+                from: new Address('jeffrey@example.com', 'Savings Api'),
+                subject: 'sign up '
         );
     }
 
@@ -44,7 +47,7 @@ class Mail extends Mailable
     public function content()
     {
         return new Content(
-            markdown: 'emails.Mail',
+            view: 'view.name',
         );
     }
 
@@ -56,5 +59,14 @@ class Mail extends Mailable
     public function attachments()
     {
         return [];
+    }
+
+    public function build()
+    {
+        // return $this->from('emailTesting@gmail.com','hello world')
+        // ->subject($this->data['subject'])->view('email.test')
+        // ->with('data',$this->data);
+        return $this->subject('Mail from ItSolutionStuff.com')
+        ->view('emails.test');
     }
 }
