@@ -26,7 +26,7 @@ class AdminTest extends TestCase
     }
 
 
-    public function test_to_fetch_all_user_transactions(){
-        
-    }
+    // public function test_to_fetch_all_user_transactions(){
+
+    // }
 }

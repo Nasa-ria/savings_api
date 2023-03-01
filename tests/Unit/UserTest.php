@@ -8,7 +8,10 @@ use App\Mail\Test;
 use Tests\TestCase;
 use App\Models\User;
 use Tests\CreatesApplication;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
@@ -150,49 +153,88 @@ class UserTest extends TestCase
             $this->actingAs($user);
         
             //passing updating values
-            $response = $this->put('api/update'.$user->id, [
-                // 's' => 'name123',
-                // 'contact' => 9842345562,
-                'address' => 'Accra,Ghana.lapaz'
+            $response = $this->patch('api/user/'.$user->id, [
+                'subscription' => 'weekly',
+                'contact' => 9842345562,
+                'address' => 'lapaz.Accra,Ghana.',
+                'next_of_kin_fullname'=>'Ama kojo',
+                'next_of_kin_address'=>'lapaz.Accra,Ghana.',
+                'next_of_kin_contact'=>'678934567'
+                
             ]);
         
             //Get new values
             $user->refresh();
-            // $this->assertEquals(9842345562, $user->contact);
-            $this->assertEquals('Accra,Ghana.lapaz', $user->address);
+            // dd($response);
+            $this->assertEquals(9842345562, $user->contact);
+            $this->assertEquals('lapaz.Accra,Ghana.', $user->address);
+            $this->assertEquals('weekly', $user->subscription);
+            $this->assertEquals('lapaz.Accra,Ghana.', $user->next_of_kin_address);
+            $this->assertEquals(678934567, $user->next_of_kin_contact);
+            $this->assertEquals('Ama kojo', $user->next_of_kin_fullname);
         }
 
          
 
                     /** @test */
-            // public function the_user_can_update_their_password()
-            // {
-            //     $this->withoutExceptionHandling();
+            public function the_user_can_update_their_password()
+            {
+                $this->withoutExceptionHandling();
 
-            //     User::factory()->create([
-            //         'email' => 'user@domain.com',
-            //         'password' => Hash::make('oldpassword')
-            //     ]);
+            //   $user=  User::factory()->create();
 
             //     $token = Password::createToken(User::first());
-
+            //     $this->actingAs($user);
+            //     // dump($user->password);
             //     Event::fake();
-
+                    
+            //     $password= $user->password;
             //     $response = $this->post('api/changePassword', [
-            //         'old_password' => 'oldpassword',
-            //         'new_password' => 'newpassword',
-            //         'confirm_password' => 'newpassword',
-            //         // 'token' => $token
+            //         'old_password' =>  'oldpassword',
+            //         'new_password' => Hash::make('newpassword'),
+            //         'confirm_password' => Hash::make('newpassword')
             //     ]);
 
-            //     dump(User::first()->password);
-
+            //     // dump(User::first()->password);
+            //     dd($response);
             //     $response->assertStatus(200);
-
-            //     $this->assertTrue(Hash::check('newpassword', User::first()->password));
-                
+                    
+            //    $check= $this->assertTrue(Hash::check('oldpassword',$user->password));
+            //            dd($check);
             //     Event::assertDispatched(PasswordReset::class);
-            // }
+
+
+
+
+                $user = factory(User::class)->create([
+                    'password' => Hash::make('USER_ORIGINAL_PASSWORD'),
+                ]);
+            
+                $token = Password::createToken(User::first());
+            
+                $password = str_random();
+            
+                $this
+                    ->followingRedirects()
+                    // ->from(route(self::ROUTE_PASSWORD_RESET, [
+                    //     'token' => $token,
+                    // ]))
+                    ->post('api/changepassword', [
+                        'token' => $token,
+                        'old_password'=>$user->password,
+                        'new_password' => $password,
+                        'confirm_password' => $password,
+                    ])
+                    ->assertSuccessful();
+                   
+            
+                     $user->refresh();
+            
+                $this->assertFalse(Hash::check($password, $user->password));
+            
+                $this->assertTrue(Hash::check($user->password,
+                    $user->password));
+            }
 
             
 
