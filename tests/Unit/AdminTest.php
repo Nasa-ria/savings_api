@@ -26,7 +26,9 @@ class AdminTest extends TestCase
     }
 
 
-    // public function test_to_fetch_all_user_transactions(){
-
-    // }
+    public function test_to_fetch_all_user_transactions(){ 
+        $response = $this->get('tansactions/{id}');
+        $response->assertStatus(200);
+        $this->assertTrue(true);
+    }
 }
