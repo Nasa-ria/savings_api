@@ -17,6 +17,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Str;
 
 
 
@@ -206,22 +207,17 @@ class UserTest extends TestCase
 
 
 
-                $user = factory(User::class)->create([
+                $user = User::factory()->create([
                     'password' => Hash::make('USER_ORIGINAL_PASSWORD'),
                 ]);
             
                 $token = Password::createToken(User::first());
             
-                $password = str_random();
+                $password = Str::random();
             
-                $this
-                    ->followingRedirects()
-                    // ->from(route(self::ROUTE_PASSWORD_RESET, [
-                    //     'token' => $token,
-                    // ]))
-                    ->post('api/changepassword', [
+                $this->post('api/changePassword', [
                         'token' => $token,
-                        'old_password'=>$user->password,
+                        'old_password'=>'USER_ORIGINAL_PASSWORD',
                         'new_password' => $password,
                         'confirm_password' => $password,
                     ])
@@ -232,7 +228,7 @@ class UserTest extends TestCase
             
                 $this->assertFalse(Hash::check($password, $user->password));
             
-                $this->assertTrue(Hash::check($user->password,
+                $this->assertTrue(Hash::check('USER_ORIGINAL_PASSWORD',
                     $user->password));
             }
 
