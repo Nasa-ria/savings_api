@@ -47,6 +47,7 @@ class AdminController extends Controller
     }
 
     public function searching(Request $request){
+        // dd($request->all());
         //get the request the user is passing
         $search = $request->input('search');
         //if you get the request, search in the model 

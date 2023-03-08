@@ -52,17 +52,24 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-            public function User()
+            public function deposit()
         {
-          $deposit= $this->belongsTo(Deposit::class,'user_id','id');
+          $deposit= $this->hasMany(Deposit::class,'user_id','id');
             // $admin  =$this->hasOne(Admin::class,'id');
             return $deposit ;
         }
 
-        // public function Users()
-        // {
-        //     return $this->hasOne(Admin::class,'id');
-        // }
+        public function Withdrawal()
+        {
+            $withdrawal= $this->hasMany(Withdrawal::class,'user_id','id');
 
+            return $withdrawal;
+        }
+        
+        public function Admin()
+        {
+          $admin  =$this->hasOne(Admin::class,'id');
+          return $admin;
+        }
 
 }

@@ -56,7 +56,7 @@ class UserTest extends TestCase
          User::factory()->create()->createToken('test');
         $response = $this->post('api/user',[
             'full_name' => 'user one',
-            'email' => 'user6723@gmail.com',
+            'email' => 'user90@gmail.com',
             'password' =>'userone1',
             'password_confirmation'=>'userone1'
         ]);   
@@ -181,31 +181,6 @@ class UserTest extends TestCase
             public function the_user_can_update_their_password()
             {
                 $this->withoutExceptionHandling();
-
-            //   $user=  User::factory()->create();
-
-            //     $token = Password::createToken(User::first());
-            //     $this->actingAs($user);
-            //     // dump($user->password);
-            //     Event::fake();
-                    
-            //     $password= $user->password;
-            //     $response = $this->post('api/changePassword', [
-            //         'old_password' =>  'oldpassword',
-            //         'new_password' => Hash::make('newpassword'),
-            //         'confirm_password' => Hash::make('newpassword')
-            //     ]);
-
-            //     // dump(User::first()->password);
-            //     dd($response);
-            //     $response->assertStatus(200);
-                    
-            //    $check= $this->assertTrue(Hash::check('oldpassword',$user->password));
-            //            dd($check);
-            //     Event::assertDispatched(PasswordReset::class);
-
-
-
 
                 $user = User::factory()->create([
                     'password' => Hash::make('USER_ORIGINAL_PASSWORD'),
