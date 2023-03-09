@@ -55,11 +55,10 @@ class AdminController extends Controller
                  ->orwhere('email', 'like', "%" . $search . "%")
                     ->get();
         if($users->count() > 0){
-            return $users;
+            return response()->json([$users]);
         }else{ 
-            return response()->json([
-                "message" => "No results found"
-            ]);
+            return "No results found";
+            
         }
     }
 

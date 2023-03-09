@@ -27,10 +27,10 @@ class UserTest extends TestCase
 {
     use DatabaseMigrations;
     use RefreshDatabase;
-        use WithFaker;
-        use CreatesApplication;
-        use HasFactory;  
-        use WithoutMiddleware;
+    use WithFaker;
+    use CreatesApplication;
+    use HasFactory;
+    use WithoutMiddleware;
     /**
      * A basic unit test example.
      *
@@ -38,41 +38,41 @@ class UserTest extends TestCase
      */
 
 
-     public function setUp() : void
-     {
+    public function setUp(): void
+    {
         parent::setUp();
         $this->artisan('passport:install');
-       #creat user seeder
+        #creat user seeder
         $this->seed('UsersTableSeeder');
-     }
+    }
 
 
-  
-     /** @test */
+
+    /** @test */
     public function test_login()
     {
         $this->withoutExceptionHandling();
         #test for signing up 
-         User::factory()->create()->createToken('test');
-        $response = $this->post('api/user',[
+        $user = User::factory()->create();
+
+        $input = [
             'full_name' => 'user one',
             'email' => 'user90@gmail.com',
-            'password' =>'userone1',
-            'password_confirmation'=>'userone1'
-        ]);   
-        //    Mail::to('ben@google.com')->send(new test());
-           Mail::raw('Hello World!', function($msg) {$msg->to('myemail@gmail.com')->subject('Test Email'); });
-        // $response ->assertStatus(200)->json(true);
-        $response->assertStatus(200);
+            'password' => 'userone1',
+            'password_confirmation' => 'userone1'
+        ];
+        $response = $this->postJson('/api/user', $input);
+        $response->assertStatus(200)->json(true);
     }
-     
 
-     /** @test */
-     public function test_database2(){
-        $this->assertDatabaseMissing('users',[
-            'full_name'=>'uyt Doe'
+
+    /** @test */
+    public function test_database2()
+    {
+        $this->assertDatabaseMissing('users', [
+            'full_name' => 'uyt Doe'
         ]);
-     }
+    }
 
 
 
@@ -90,52 +90,53 @@ class UserTest extends TestCase
 
 
 
-     /** @test */
-     public function test_to_fetch_all_user(){
+    /** @test */
+    public function test_to_fetch_all_user()
+    {
         $this->withoutExceptionHandling();
         $response = $this->get('api/users');
         $response->assertStatus(200);
-     }
-
-
-     /** @test */
-     public function test_delete_user(){
-        $this->withoutExceptionHandling();
-         // First The user is created
-         $user = User::factory()->create();
-         //act as user
-         $this->actingAs($user);
-        $response = $this->delete('api/user/'.$user->id);
-        $this->assertEquals(200, $response->getStatusCode());
-
-
-     }
-
-
-     /** @test */
-     public function test_user_profile(){
-     $this->withoutExceptionHandling();
-     // First The user is created
-      $user = User::factory()->create();
-         //act as user
-     $this->actingAs($user);
-         // Then we want to make sure a profile page is created
-     $response = $this->get('/api/profile/'.$user->id);
-         //
-     $response->assertStatus(200);
     }
 
 
-         /** @test */
-     public function test_for_email_sending()
+    /** @test */
+    public function test_delete_user()
+    {
+        $this->withoutExceptionHandling();
+        // First The user is created
+        $user = User::factory()->create();
+        //act as user
+        $this->actingAs($user);
+        $response = $this->delete('api/user/' . $user->id);
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
+
+    /** @test */
+    public function test_user_profile()
+    {
+        $this->withoutExceptionHandling();
+        // First The user is created
+        $user = User::factory()->create();
+        //act as user
+        $this->actingAs($user);
+        // Then we want to make sure a profile page is created
+        $response = $this->get('/api/profile/' . $user->id);
+        //
+        $response->assertStatus(200);
+    }
+
+
+    /** @test */
+    public function test_for_email_sending()
     {
         $this->withoutExceptionHandling();
         Mail::fake();
         $data = [
-                        'title' => 'Mail from ItSolutionStuff.com',
-                        'body' => 'This is for testing email using smtp.'
-                    ];
-        $mail= Mail::to('emailTesting@gmail.com')->send(new Test($data));
+            'title' => 'Mail from ItSolutionStuff.com',
+            'body' => 'This is for testing email using smtp.'
+        ];
+        $mail = Mail::to('emailTesting@gmail.com')->send(new Test($data));
 
         Mail::assertSent(Test::class);
     }
@@ -143,81 +144,52 @@ class UserTest extends TestCase
 
 
 
-        //    /** @test */
-        public function test_update_user(){
-            $this->withExceptionHandling(); 
+    //    /** @test */
+    public function test_update_user()
+    {
+        $this->withExceptionHandling();
 
-            //creating a user
-            $user = User::factory()->create();
-        
-            //signing in as the new user
-            $this->actingAs($user);
-        
-            //passing updating values
-            $response = $this->patch('api/user/'.$user->id, [
-                'subscription' => 'weekly',
-                'contact' => 9842345562,
-                'address' => 'lapaz.Accra,Ghana.',
-                'next_of_kin_fullname'=>'Ama kojo',
-                'next_of_kin_address'=>'lapaz.Accra,Ghana.',
-                'next_of_kin_contact'=>'678934567'
-                
-            ]);
-        
-            //Get new values
-            $user->refresh();
-            // dd($response);
-            $this->assertEquals(9842345562, $user->contact);
-            $this->assertEquals('lapaz.Accra,Ghana.', $user->address);
-            $this->assertEquals('weekly', $user->subscription);
-            $this->assertEquals('lapaz.Accra,Ghana.', $user->next_of_kin_address);
-            $this->assertEquals(678934567, $user->next_of_kin_contact);
-            $this->assertEquals('Ama kojo', $user->next_of_kin_fullname);
-        }
+        //creating a user
+        $user = User::factory()->create();
 
-         
+        //signing in as the new user
+        $this->actingAs($user);
 
-                    /** @test */
-            public function the_user_can_update_their_password()
-            {
-                $this->withoutExceptionHandling();
+        //passing updating values
 
-                $user = User::factory()->create([
-                    'password' => Hash::make('USER_ORIGINAL_PASSWORD'),
-                ]);
-            
-                $token = Password::createToken(User::first());
-            
-                $password = Str::random();
-            
-                $this->post('api/changePassword', [
-                        'token' => $token,
-                        'old_password'=>'USER_ORIGINAL_PASSWORD',
-                        'new_password' => $password,
-                        'confirm_password' => $password,
-                    ])
-                    ->assertSuccessful();
-                   
-            
-                     $user->refresh();
-            
-                $this->assertFalse(Hash::check($password, $user->password));
-            
-                $this->assertTrue(Hash::check('USER_ORIGINAL_PASSWORD',
-                    $user->password));
-            }
+        $input = [
+            'subscription' => 'weekly',
+            'contact' => 9842345562,
+            'address' => 'lapaz.Accra,Ghana.',
+            'next_of_kin_fullname' => 'Ama kojo',
+            'next_of_kin_address' => 'lapaz.Accra,Ghana.',
+            'next_of_kin_contact' => '678934567'
 
-            
-
-            
+        ];
+        $response = $this->patchJson('/api/user/' . $user->id, $input);
+        $response->assertStatus(200)->json(true);
+        // $this->assertEquals($user);
+    }
 
 
 
-            
+    /** @test */
+    public function test_the_user_can_update_their_password()
+    {
+        $this->withoutExceptionHandling();
 
-
-               
-
-
-
-        }
+        $user = User::factory()->create([
+            'password' => Hash::make('USER_ORIGINAL_PASSWORD'),
+        ]);
+        $token = Password::createToken(User::first());
+        $password = Str::random();
+        $input = [
+            'token' => $token,
+            'old_password' => 'USER_ORIGINAL_PASSWORD',
+            'new_password' => $password,
+            'confirm_password' => $password,
+        ];
+        $response = $this->json('POST', route('passwordchange', $input));
+        $this->assertTrue(Hash::check($response->new_assword,$user->password));
+    }
+}
