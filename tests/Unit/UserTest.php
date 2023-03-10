@@ -81,11 +81,18 @@ class UserTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $hasUser = $user ? true : false;
+        // $hasUser = $user ? true : false;
 
-        $this->assertTrue($hasUser);
+        // $this->assertTrue($hasUser);
+        $password = Str::random();
+        $input = [
+            'email' => 'mtyumariihfgja@gmail.com',
+            'password'=>$password  
+        ];
+        $response = $this->json('POST', route('signin', $input));
+        // $response = $this->actingAs($user);
+        $response->assertStatus(200);
 
-        $response = $this->actingAs($user);
     }
 
 

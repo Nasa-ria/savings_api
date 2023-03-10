@@ -23,7 +23,7 @@ use App\Http\Controllers\TransactionController;
 //     return $request->user();
 // });
 
-Route::post('SignIn', [UsersController::class, 'SignIn']);
+Route::post('SignIn', [UsersController::class, 'SignIn'])->name('signin');
 Route::post('SignOut', [UsersController::class, 'signout']);
 Route::post('changePassword',[UsersController::class,'changePassword'])->name('passwordchange');
 Route::apiresource('user',UsersController::class);

@@ -46,12 +46,12 @@ class UsersController extends Controller
          $token = $user->createToken("USERS");
          $accessToken = $token->accessToken;
 
-                 $mail = $request->email;
-                $data = [
-                    'title' => 'Mail from ItSolutionStuff.com',
-                    'body' => 'This is for testing email using smtp.'
-                ];
-        $mail= Mail::to($mail)->send(new savingMail($data));
+        //          $mail = $request->email;
+        //         $data = [
+        //             'title' => 'Mail from ItSolutionStuff.com',
+        //             'body' => 'This is for testing email using smtp.'
+        //         ];
+        // $mail= Mail::to($mail)->send(new savingMail($data));
 
         /**
          * Check if the email has been sent successfully, or not.
@@ -122,25 +122,7 @@ class UsersController extends Controller
         $credentials = $request->only('email', 'password');
         if (Auth::attempt($credentials)) {
             return"login successfully";
-
-            //             $mail = $request->email;
-            //             $data = [
-            //                 'title' => 'Mail from ItSolutionStuff.com',
-            //                 'body' => 'This is for testing email using smtp.'
-            //             ];
-            //         $mail= Mail::to($mail)->send(new savingMail($data));
-
-            //             /**
-            //              * Check if the email has been sent successfully, or not.
-            //              * Return the appropriate message.
-            //              */
-            //         if($mail){
-            //         return "Email has been sent successfully.";  
-            //     }
-            //     return "Oops! There was some error sending the email.";
             }
-            
-        
              return "fail";
     }
 
