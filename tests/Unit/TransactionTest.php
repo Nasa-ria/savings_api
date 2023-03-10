@@ -30,14 +30,27 @@ class TransactionTest extends TestCase
            $user = User::factory()->create();
            $this->actingAs($user);
         $input = [
-        
             'amount_deposited' => 60  ,
-             
-               
+            'user_id'=>$user->id    
         ];
         $response = $this->json('POST', route('deposit', $input));
         
-        // $this->assertEquals(200, $response->getStatusCode());
+        // $this->assertEquals($response->user_id,$user->id);
+        $response->assertStatus(200);
+    }
+
+    public function test_withdrawal()
+    {
+        $this->withoutExceptionHandling();
+           $user = User::factory()->create();
+           $this->actingAs($user);
+        $input = [
+            'amount_withdrawn' => 60  ,
+            'user_id'=>$user->id    
+        ];
+        $response = $this->json('POST', route('withdrawal', $input));
+        
+        // $this->assertEquals($response->user_id,$user->id);
         $response->assertStatus(200);
     }
 }

@@ -28,7 +28,7 @@ Route::post('SignOut', [UsersController::class, 'signout']);
 Route::post('changePassword',[UsersController::class,'changePassword'])->name('passwordchange');
 Route::apiresource('user',UsersController::class);
 Route::post('deposit', [TransactionController::class, 'deposit'])->name('deposit');
-Route::post('withdrawal', [TransactionController::class, 'withdrawals']);
+Route::post('withdrawal', [TransactionController::class, 'withdrawals'])->name('withdrawal');
 Route::get('users', [AdminController::class, 'Users']);
 Route::get('profile/{id}', [AdminController::class, 'profile'])->name('profile');
 Route::get('search', [AdminController::class, 'searching'])->name('search');

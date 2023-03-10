@@ -64,12 +64,12 @@ class transactions extends Mailable
         return [];
     }
 
-//     public function build(){
-//         return $this->from('theemail@gmail.com', 'Me')
-// 		->to('mumuninasaria@gmail.com', 'Your mail')
-//           ->view('emails.email.transaction')
-//           ->with([
-//               'contact' => $this->email
-//           ]);
-//     }
+    public function build(){
+        return $this->from('theemail@gmail.com', 'Me')
+		->to('mumuninasaria@gmail.com', 'Your mail')
+          ->view('emails.email.transaction')
+          ->with([
+              'contact' => $this->email
+          ]);
+    }
 }
