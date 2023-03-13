@@ -33,7 +33,7 @@ class transactionMail
         // DB:: table('users')->update([
         //     'email'=>$event->email
         // ]);
-        Mail::to($event->email)->send(new transactions);
+        Mail::to($event->email)->send(new transactions($event->deposit));
     }
 }
   

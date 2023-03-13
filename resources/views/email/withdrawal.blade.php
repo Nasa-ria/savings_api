@@ -6,13 +6,18 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
 </head>
-<body>
+<body> -->
     <div class="container" style="padding: 1rem; background: #f5f5f5;">
-        <p>Good Morning XYZ!</p>
+
+        <p>Hello XYZ!</p>
         <p>
-            Welcome to Laravel. This is a demo of sending emails through
-            the Mailgun email service.<a href="{{ route('user.update',$user->id) }}">Edit</a></small>
+            Welcome to Laravel savings api . you made a withdrawal  of  {{$withdrawal->amount_withdrawn}} amount .have a good day .
+            on {{$withdrawal->created_at}}
         </p>
+        <div>
+     
+  
+</div>
     </div>
-</body>
-</html>
+ </body>
+</html> 

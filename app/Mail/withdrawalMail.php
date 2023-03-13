@@ -2,7 +2,7 @@
 
 namespace App\Mail;
 
-use App\Models\User;
+use App\Models\Withdrawal;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Address;
@@ -11,21 +11,27 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class savingMail extends Mailable
+class withdrawalMail extends Mailable
 {
+  
     use Queueable, SerializesModels;
-     
-    public $user ;
- 
+    public $withdrawal;
+    /**
+     * The order instance.
+     *
+     * @var \App\Models\Withdrawal
+     */
+   
+
     /**
      * Create a new message instance.
      *
      * @return void
+     * 
      */
-    public function __construct(User $user)
+    public function __construct(Withdrawal $withdrawal)
     {
-        $this-> user= $user;
-   
+        $this->withdrawal = $withdrawal;
     }
 
     /**
@@ -36,10 +42,11 @@ class savingMail extends Mailable
     public function envelope()
     {
         return new Envelope(
-            // subject: 'Saving Mail',
-                from: new Address('jeffrey@example.com', 'Savings Api'),
-                subject: 'sign up ',
+            from: new Address('jeffrey@example.com', 'Savings Api'),
+                subject: 'transcation  ',
         );
+
+     
     }
 
     /**
@@ -49,14 +56,22 @@ class savingMail extends Mailable
      */
     public function content()
     {
-
         return new Content(
-            view: 'email.test ',
-            with: [
-                'id' => $this->user->id,
-               
-            ],
-        );
+            view: 'email.withdrawal',
+          with: [
+            'amount_withdrawn' => $this->withdrawal->amount_withdrawn,
+           
+        ],
+
+
+        // return $this->from('theemail@gmail.com', 'Me')
+		// ->to('mumuninasaria@gmail.com', 'Your mail')
+        //   ->view('email.transaction')
+        //   ->with([
+        //       'amount_deposited' => $this->deposit->amount_deposited
+        //   ]);
+
+    );
     }
 
     /**
@@ -66,15 +81,6 @@ class savingMail extends Mailable
      */
     public function attachments()
     {
-        // return [];
+        return [];
     }
-
-    // public function build()
-    // {
-    //     // return $this->from('emailTesting@gmail.com','hello world')
-    //     // ->subject($this->data['subject'])->view('email.test')
-    //     // ->with('data',$this->data);
-    //     return $this->subject('Mail from ItSolutionStuff.com')
-    //     ->view('emails.test');
-    // }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\Deposit;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Address;
@@ -14,17 +15,23 @@ class transactions extends Mailable
 {
   
     use Queueable, SerializesModels;
-
-    public $email;
+    public $deposit;
+    /**
+     * The order instance.
+     *
+     * @var \App\Models\Deposit
+     */
+   
 
     /**
      * Create a new message instance.
      *
      * @return void
+     * 
      */
-    public function __construct()
+    public function __construct(Deposit $deposit)
     {
-    
+        $this->deposit = $deposit;
     }
 
     /**
@@ -51,7 +58,20 @@ class transactions extends Mailable
     {
         return new Content(
             view: 'email.transaction',
-        );
+          with: [
+            'amount_deposited' => $this->deposit->amount_deposited,
+           
+        ],
+
+
+        // return $this->from('theemail@gmail.com', 'Me')
+		// ->to('mumuninasaria@gmail.com', 'Your mail')
+        //   ->view('email.transaction')
+        //   ->with([
+        //       'amount_deposited' => $this->deposit->amount_deposited
+        //   ]);
+
+    );
     }
 
     /**
@@ -64,12 +84,12 @@ class transactions extends Mailable
         return [];
     }
 
-    public function build(){
-        return $this->from('theemail@gmail.com', 'Me')
-		->to('mumuninasaria@gmail.com', 'Your mail')
-          ->view('emails.email.transaction')
-          ->with([
-              'contact' => $this->email
-          ]);
-    }
+    // public function build(){
+    //     return $this->from('theemail@gmail.com', 'Me')
+	// 	->to('mumuninasaria@gmail.com', 'Your mail')
+    //       ->view('email.transaction')
+    //       ->with([
+    //           'amount_deposited' => $this->deposit->amount_deposited
+    //       ]);
+    // }
 }

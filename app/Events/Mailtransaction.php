@@ -14,6 +14,7 @@ class Mailtransaction
 {
 
     public $email;
+    public $deposit;
 
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -22,10 +23,12 @@ class Mailtransaction
      *
      * @return void
      */
-    public function __construct($email)
+    public function __construct($email,$deposit)
     {
-        $this->$email=$email;
+        $this->email=$email;
+        $this->deposit=$deposit;
     }
+    
 
     /**
      * Get the channels the event should broadcast on.

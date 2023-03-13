@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
+// use App\Mail\Mail;
 use App\Models\User;
 use App\Models\Deposit;
 use App\Models\Withdrawal;
 use Illuminate\Http\Request;
 use App\Events\Mailtransaction;
+use App\Mail\withdrawalMail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class TransactionController extends Controller
 {
@@ -21,15 +24,12 @@ class TransactionController extends Controller
         ]);
         $deposit = new Deposit();
         // $id = Auth::user()?->id;
-        $deposit['user_id'] = auth()->user()->id;
+        $deposit['user_id'] = auth('api')->user()->id;;
         // auth('api')->user()->id; 
         $deposit->amount_deposited = $request->input('amount_deposited');
         $deposit->save();
         $email =   auth('api')->user()->email;
-        // Auth::user()?->email;
-        // auth('api')->user()->email;
-        //    dd($email);
-        event(new Mailtransaction($email));
+        event(new Mailtransaction($email,$deposit));
 
         // updating balance 
         $user_id = $deposit->user_id;
@@ -54,9 +54,9 @@ class TransactionController extends Controller
 
             ]);
         }
-        $email = auth('api')->user()->email;
-        //    dd($email);
-        event(new Mailtransaction($email));
+        // $email = auth('api')->user()->email;
+        // //    dd($email);
+        // event(new Mailtransaction($email,$deposit));
     }
 
 
@@ -72,7 +72,16 @@ class TransactionController extends Controller
         $withdrawal->amount_withdrawn = $request->input('amount_withdrawn');
         $withdrawal->save();
         $email =   auth('api')->user()->email;
-        event(new Mailtransaction($email));
+        // event(new Mailtransaction($email,$deposit));/
+
+                //   $mail = $request->email;
+                // $data = [
+                //     'title' => 'Mail from ItSolutionStuff.com',
+                //     'body' => 'This is for testing email using smtp.'
+                // ];
+         Mail::to($email)->send(new withdrawalMail($withdrawal));
+
+
         // updating balance
         $user_id = $withdrawal->user_id;
         if ($user_id) {
