@@ -47,10 +47,10 @@ class UsersController extends Controller
          $accessToken = $token->accessToken;
 
                  $mail = $request->email;
-                $data = [
-                    'title' => 'Mail from ItSolutionStuff.com',
-                    'body' => 'This is for testing email using smtp.'
-                ];
+                // $data = [
+                //     'title' => 'Mail from ItSolutionStuff.com',
+                //     'body' => 'This is for testing email using smtp.'
+                // ];
         $mail= Mail::to($mail)->send(new savingMail($user));
 
         /**
