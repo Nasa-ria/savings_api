@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\savingMail;
 use App\Models\User;
+use App\Mail\savingMail;
+use Error;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
+use Laravel\Socialite\Facades\Socialite;
 
 
 class UsersController extends Controller
@@ -31,7 +33,23 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
-        //    dd($request->all());
+
+
+        try {
+
+            $user = Socialite::driver('google')->user();
+
+            $finduser = User::where('google_id', $user->id)->first();
+
+            if($finduser){
+
+                Auth::login($finduser);
+
+                return "good";
+
+            }else{
+
+                 //    dd($request->all());
         $request->validate([
             'full_name' => 'required',
             'email' => 'required|email|unique:users',
@@ -42,6 +60,7 @@ class UsersController extends Controller
         $user-> full_name  = $request->input('full_name');
         $user-> email  = $request->input('email');
         $user-> password    =  Hash::make($request->password);
+        $user->google_id =$user->id;
          $user->save();
          $token = $user->createToken("USERS");
          $accessToken = $token->accessToken;
@@ -63,6 +82,54 @@ class UsersController extends Controller
                 'token' => $accessToken,
                 // "Email has been sent successfully."
             ]);
+
+            
+
+                // ]);
+
+                // Auth::login($newUser);
+
+                // return redirect()->back();
+
+            }
+
+        } catch (Error) {  
+
+            return "error";
+
+        }
+        // //    dd($request->all());
+        // $request->validate([
+        //     'full_name' => 'required',
+        //     'email' => 'required|email|unique:users',
+        //     'password' => 'required|min:8|confirmed',
+           
+        // ]);
+        // $user= new User();
+        // $user-> full_name  = $request->input('full_name');
+        // $user-> email  = $request->input('email');
+        // $user-> password    =  Hash::make($request->password);
+        //  $user->save();
+        //  $token = $user->createToken("USERS");
+        //  $accessToken = $token->accessToken;
+
+        //          $mail = $request->email;
+        //         // $data = [
+        //         //     'title' => 'Mail from ItSolutionStuff.com',
+        //         //     'body' => 'This is for testing email using smtp.'
+        //         // ];
+        // $mail= Mail::to($mail)->send(new savingMail($user));
+
+        // /**
+        //  * Check if the email has been sent successfully, or not.
+        //  * Return the appropriate message.
+        //  */
+        //     // if($mail){
+        //     return response()->json([
+        //         'data' => $user->refresh(),
+        //         'token' => $accessToken,
+        //         // "Email has been sent successfully."
+        //     ]);
         }
         // return "Oops! There was some error sending the email.";
         //   }
