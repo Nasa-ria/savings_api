@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('withdrawals', function (Blueprint $table) {
             $table->id();
-            $table->string('amount_withdrawn');
-            $table->string('balance')->nullable();
+            $table->float('amount_withdrawn');
+            // $table->string('balance')->nullable();
             $table->unsignedBigInteger('user_id');
             $table->timestamps();
         });

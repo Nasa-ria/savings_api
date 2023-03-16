@@ -17,22 +17,23 @@ class DepositsTableSeeder extends Seeder
      */
     public function run()
     {
-        Deposit::create(
-            [
-                 'user_id' =>User::all()->unique()->random()->id,
-                 'amount_deposited'=>500,
-                 'balance'=>0,
-             ],
-             [
-                 'user_id' => User::all()->unique()->random()->id,
-                 'amount_deposited'=>500,
-                 'balance'=>0,
-             ],
-             [
-                 'user_id' =>User::all()->unique()->random()->id,
-                 'amount_deposited'=>500,
-                 'balance'=>0,
-             ]
-         );
+        // Deposit::create(
+        //     [
+        //          'user_id' =>User::all()->unique()->random()->id,
+        //          'amount_deposited'=>500,
+        //          'balance'=>0,
+        //      ],
+        //      [
+        //          'user_id' => User::all()->unique()->random()->id,
+        //          'amount_deposited'=>500,
+        //          'balance'=>0,
+        //      ],
+        //      [
+        //          'user_id' =>User::all()->unique()->random()->id,
+        //          'amount_deposited'=>500,
+        //          'balance'=>0,
+        //      ]
+        //  );
+         Deposit::factory()->count(4)->create();
     }
 }

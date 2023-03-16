@@ -25,11 +25,11 @@ use App\Http\Controllers\TransactionController;
 
 Route::post('SignIn', [UsersController::class, 'SignIn'])->name('signin');
 Route::post('SignOut', [UsersController::class, 'signout']);
-Route::post('changePassword',[UsersController::class,'changePassword'])->name('passwordchange');
-Route::apiresource('user',UsersController::class);
-Route::post('deposit', [TransactionController::class, 'deposit'])->name('deposit');
-Route::post('withdrawal', [TransactionController::class, 'withdrawals'])->name('withdrawal');
-Route::get('users', [AdminController::class, 'Users']);
+Route::post('changePassword', [UsersController::class, 'changePassword'])->name('passwordchange');
+Route::apiresource('users', UsersController::class);
+Route::post('deposit/{user}', [TransactionController::class, 'deposit'])->name('deposit');
+Route::post('withdrawal/{user}', [TransactionController::class, 'withdrawals'])->name('withdrawal');
+Route::get('admin', [AdminController::class, 'Users'])->name('allUsers');
 Route::get('profile/{id}', [AdminController::class, 'profile'])->name('profile');
 Route::get('search', [AdminController::class, 'searching'])->name('search');
 Route::get('tansactions/{id}', [AdminController::class, 'tansactions'])->name('transactions');

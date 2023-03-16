@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('deposits', function (Blueprint $table) {
             $table->id();
-            $table->string('amount_deposited');
-            $table->string('balance')->nullable();
+            $table->float('amount_deposited');
+            // $table->string('balance')->nullable();
             $table->unsignedBigInteger('user_id');
             
             $table->timestamps();

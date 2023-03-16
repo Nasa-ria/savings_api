@@ -11,7 +11,7 @@
         <p>Good Morning XYZ!</p>
         <p>
             Welcome to Laravel. This is a demo of sending emails through
-            the Mailgun email service.<a href="{{ route('user.update',$user->id) }}">Edit</a></small>
+            the Mailgun email service.<a href="{{ route('users.update',$user->id) }}">Edit</a></small>
         </p>
     </div>
 </body>

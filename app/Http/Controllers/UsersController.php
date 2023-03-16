@@ -22,7 +22,7 @@ class UsersController extends Controller
      */
     public function index()
     {
-        //
+        return "hello";
     }
 
     /**
@@ -35,80 +35,32 @@ class UsersController extends Controller
     {
 
 
-        try {
+        // try {
 
-            $user = Socialite::driver('google')->user();
+        //     $user = Socialite::driver('google')->user();
 
-            $finduser = User::where('google_id', $user->id)->first();
+        //     $finduser = User::where('google_id', $user->id)->first();
 
-            if($finduser){
+        //     if($finduser){
 
-                Auth::login($finduser);
+        //         Auth::login($finduser);
 
-                return "good";
+        //         return "good";
 
-            }else{
+        //     }else{
 
-                 //    dd($request->all());
-        $request->validate([
-            'full_name' => 'required',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|min:8|confirmed',
-           
-        ]);
-        $user= new User();
-        $user-> full_name  = $request->input('full_name');
-        $user-> email  = $request->input('email');
-        $user-> password    =  Hash::make($request->password);
-        $user->google_id =$user->id;
-         $user->save();
-         $token = $user->createToken("USERS");
-         $accessToken = $token->accessToken;
-
-                 $mail = $request->email;
-                // $data = [
-                //     'title' => 'Mail from ItSolutionStuff.com',
-                //     'body' => 'This is for testing email using smtp.'
-                // ];
-        $mail= Mail::to($mail)->send(new savingMail($user));
-
-        /**
-         * Check if the email has been sent successfully, or not.
-         * Return the appropriate message.
-         */
-            // if($mail){
-            return response()->json([
-                'data' => $user->refresh(),
-                'token' => $accessToken,
-                // "Email has been sent successfully."
-            ]);
-
-            
-
-                // ]);
-
-                // Auth::login($newUser);
-
-                // return redirect()->back();
-
-            }
-
-        } catch (Error) {  
-
-            return "error";
-
-        }
-        // //    dd($request->all());
+        //          //    dd($request->all());
         // $request->validate([
         //     'full_name' => 'required',
         //     'email' => 'required|email|unique:users',
         //     'password' => 'required|min:8|confirmed',
-           
+
         // ]);
         // $user= new User();
         // $user-> full_name  = $request->input('full_name');
         // $user-> email  = $request->input('email');
         // $user-> password    =  Hash::make($request->password);
+        // $user->google_id =$user->id;
         //  $user->save();
         //  $token = $user->createToken("USERS");
         //  $accessToken = $token->accessToken;
@@ -130,11 +82,54 @@ class UsersController extends Controller
         //         'token' => $accessToken,
         //         // "Email has been sent successfully."
         //     ]);
-        }
-        // return "Oops! There was some error sending the email.";
-        //   }
 
-    
+
+
+        //         // ]);
+
+        //         // Auth::login($newUser);
+
+        //         // return redirect()->back();
+
+        //     }
+
+        // } catch (Error) {  
+
+        //     return "error";
+
+        // }
+        // //    dd($request->all());
+        $request->validate([
+            'full_name' => 'required',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|min:8|confirmed',
+
+        ]);
+        $user = new User();
+        $user->full_name  = $request->input('full_name');
+        $user->email  = $request->input('email');
+        $user->password    =  Hash::make($request->password);
+        $user->save();
+        $token = $user->createToken("USERS");
+        $accessToken = $token->accessToken;
+
+                 $mail = $request->email;
+        $mail= Mail::to($mail)->send(new savingMail($user));
+
+        // /**
+        //  * Check if the email has been sent successfully, or not.
+        //  * Return the appropriate message.
+        //  */
+        if($mail){
+        return response()->json([
+            'data' => $user->refresh(),
+            'token' => $accessToken,
+            // "Email has been sent successfully."
+        ]);
+        }
+        return "Oops! There was some error sending the email.";
+    }
+
 
     /**
      * Display the specified resource.
@@ -156,15 +151,15 @@ class UsersController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $user=User:: find($id);
-        $user->address= $request->get('address');
-        $user->contact= $request->get('contact');
-        $user->subscription= $request->get('subscription');
-        $user->next_of_kin_fullname= $request->get('next_of_kin_fullname');
-        $user->next_of_kin_address= $request->get('next_of_kin_address');
-        $user->next_of_kin_contact= $request->get('next_of_kin_contact'); 
+        $user = User::find($id);
+        $user->address = $request->get('address');
+        $user->contact = $request->get('contact');
+        $user->subscription = $request->get('subscription');
+        $user->next_of_kin_fullname = $request->get('next_of_kin_fullname');
+        $user->next_of_kin_address = $request->get('next_of_kin_address');
+        $user->next_of_kin_contact = $request->get('next_of_kin_contact');
         $user->save();
-      return $user;
+        return $user;
     }
 
     /**
@@ -175,60 +170,60 @@ class UsersController extends Controller
      */
     public function destroy($id)
     {
-        $user=User::find($id);
-        User::where('id', '=', $user)->delete();
-        // $user->destroy();
+        $user = User::find($id);
+        // User::where('id', '=', $user)->delete();
+        $user->delete();
+        return response()->json([
+            'message' => 'User Deleted'
+        ]);
     }
 
-    public function SignIn(Request $request )
-    { 
+    public function SignIn(Request $request)
+    {
         $request->validate([
             'email' => 'required',
             'password' => 'required',
         ]);
         $credentials = $request->only('email', 'password');
         if (Auth::attempt($credentials)) {
-            return"login successfully";
-            }
-             return "fail";
+            return "login successfully";
+        }
+        return "fail";
     }
 
 
 
-    public function Signout() {
+    public function Signout()
+    {
         Session::flush();
         Auth::logout();
-    
+
         return 'logout';
     }
 
-      
 
-    public function changePassword(Request $request  )
-{     
-        $user= auth('api')->user();
+
+    public function changePassword(Request $request)
+    {
+        $user = auth('api')->user();
         // $password = $user->password;
         // dd($password);
 
-            $request->validate([
-                'old_password' => 'required',
-                'new_password' => 'required',
-                'confirm_password' => 'required'
-            ]);
-              if($user && Hash::check($request->old_password, $user->password)){
-                if($request->new_password == $request->confirm_password){
+        $request->validate([
+            'old_password' => 'required',
+            'new_password' => 'required',
+            'confirm_password' => 'required'
+        ]);
+        if ($user && Hash::check($request->old_password, $user->password)) {
+            if ($request->new_password == $request->confirm_password) {
                 #Update the new Password
-                    User::whereId($user->id)->update([
-                    'password' => Hash::make($request->new_password) ]);
-                     return "password change successfully";
-                 }
-                    return " password mismatch";
-                 }
-                return " error:Old Password Doesn't match!";
+                User::whereId($user->id)->update([
+                    'password' => Hash::make($request->new_password)
+                ]);
+                return "password change successfully";
             }
-
+            return " password mismatch";
+        }
+        return " error:Old Password Doesn't match!";
     }
-
-
-
-
+}

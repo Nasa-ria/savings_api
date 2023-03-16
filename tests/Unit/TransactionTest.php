@@ -28,12 +28,13 @@ class TransactionTest extends TestCase
     {
         $this->withoutExceptionHandling();
            $user = User::factory()->create();
-           $this->actingAs($user);
         $input = [
             'amount_deposited' => 60  ,
-            'user_id'=>$user->id    
+   
         ];
-        $response = $this->json('POST', route('deposit', $input));
+        $response = $this->json('POST', route('deposit',$user), $input);
+
+        // dd($response);
         
         // $this->assertEquals($response->user_id,$user->id);
         $response->assertStatus(200);
@@ -43,14 +44,11 @@ class TransactionTest extends TestCase
     {
         $this->withoutExceptionHandling();
            $user = User::factory()->create();
-           $this->actingAs($user);
         $input = [
-            'amount_withdrawn' => 60  ,
-            'user_id'=>$user->id    
+            'amount_withdrawn' => 10  ,   
         ];
-        $response = $this->json('POST', route('withdrawal', $input));
-        
-        // $this->assertEquals($response->user_id,$user->id);
+        $response = $this->json('POST', route('withdrawal',$user),$input);
+        // dd($response);      er_id,$user->id);
         $response->assertStatus(200);
     }
 }
